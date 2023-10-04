@@ -1,6 +1,7 @@
 package com.example.demo;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -124,6 +125,19 @@ public class PuzzleState {
             array[index] = array[i];
             array[i] = temp;
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PuzzleState that = (PuzzleState) o;
+        return Arrays.deepEquals(board, that.board);
+    }
+
+    @Override
+    public int hashCode() {
+        return Arrays.deepHashCode(board);
     }
 
     // ... (other methods)
