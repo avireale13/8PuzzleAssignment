@@ -159,7 +159,6 @@ public class Controller {
 
     @FXML
     private void showButton(ActionEvent event) {
-        buttonToHide.setVisible(true);
         buttonToShow.setVisible(true);
     }
 }
