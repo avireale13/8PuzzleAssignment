@@ -7,12 +7,10 @@ import java.util.Random;
 public class PuzzleState {
     private int[][] board;
     private int size;
-    private int goalValue;
 
     public PuzzleState(int[][] board) {
         this.board = board;
         this.size = board.length;
-        this.goalValue = 1;
     }
 
     public int[][] getBoard() {
@@ -24,14 +22,20 @@ public class PuzzleState {
     }
 
     public boolean isGoalState() {
+        int[][] expectedGoal = {
+                {1, 2, 3},
+                {8, 0, 4},
+                {7, 6, 5}
+        };
+
         for (int row = 0; row < size; row++) {
             for (int col = 0; col < size; col++) {
-                if (board[row][col] != goalValue) {
+                if (board[row][col] != expectedGoal[row][col]) {
                     return false;
                 }
-                goalValue = (goalValue % (size * size)) + 1;
             }
         }
+
         return true;
     }
 
