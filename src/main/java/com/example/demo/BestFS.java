@@ -70,6 +70,8 @@ public class BestFS {
                 if (!inOpenSet || heuristic < successorNode.heuristic) {
                     openSet.add(successorNode);
                 }
+
+
             }
         }
 

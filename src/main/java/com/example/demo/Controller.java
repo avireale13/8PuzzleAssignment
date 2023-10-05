@@ -1,12 +1,14 @@
 package com.example.demo;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import javafx.scene.layout.GridPane;
-
-import java.util.*;
+import javafx.scene.text.TextAlignment;
 
 public class Controller {
     @FXML
@@ -37,6 +39,12 @@ public class Controller {
     private Text nodesVisitedText;
 
     @FXML
+    private Button newGame;
+
+    @FXML
+    private Button quit;
+
+    @FXML
     private GridPane puzzleGrid; // Assuming you have a GridPane for the puzzle
 
     private PuzzleState initialState;
@@ -52,6 +60,9 @@ public class Controller {
 
     @FXML
     private void initialize() {
+        newGame.setVisible(false);
+        quit.setVisible(false);
+
         // Clear existing items from the menu
         menu.getItems().clear();
 
@@ -80,6 +91,8 @@ public class Controller {
         int[][] board = initialState.getBoard();
         fillGridWithPuzzleValues(board);
         hideButton(startNewGame);
+        newGame.setVisible(true);
+        quit.setVisible(true);
     }
 
     @FXML
@@ -117,11 +130,35 @@ public class Controller {
         }
     }
 
+    @FXML
+    private void handleNewGame(ActionEvent event) {
+        initialState = PuzzleState.createRandomInitialState();
+        int[][] board = initialState.getBoard();
+        fillGridWithPuzzleValues(board);
+        hideButton(startNewGame);
+    }
+
+    @FXML
+    private void handleNewGameButton(ActionEvent event) {
+        handleNewGame(event);
+    }
+
+    @FXML
+    private void handleQuitButton(ActionEvent event) {
+        Platform.exit();
+        System.exit(0);
+    }
+
     private SearchStats solvePuzzle(SearchAlgorithm algorithm, PuzzleState initialState) {
         switch (algorithm) {
             case BFS:
                 return BFS.breadthFirstSearch(initialState);
-            // Implement handling for other algorithms (UCS, Best-First, A*) here
+            case UCS:
+                return UCS.uniformCostSearch(initialState);
+            case BEST_FIRST:
+                return BestFS.bestFirstSearch(initialState);
+            case A_STAR:
+                return ASTAR.aStarSearch(initialState);
             default:
                 return null;
         }
@@ -129,16 +166,15 @@ public class Controller {
 
     private void updateUIWithStats(SearchStats stats) {
         if (stats != null) {
-            runTime1.setText("Runtime: " + stats.getRuntime() + " ms");
-            nodeVisits2.setText("Nodes Visited: " + stats.getNodesVisited());
+            runTime1.setText(stats.getRuntime() + " ms");
+            nodeVisits2.setText(String.valueOf(stats.getNodesVisited()));
         } else {
-            runTime1.setText("Runtime: N/A");
-            nodeVisits2.setText("Nodes Visited: N/A");
+            runTime1.setText("N/A");
+            nodeVisits2.setText("N/A");
         }
     }
 
     private void fillGridWithPuzzleValues(int[][] board) {
-        puzzleGrid.getChildren().clear(); // Clear existing content
 
         int numRows = board.length;
         int numCols = board[0].length;
@@ -147,9 +183,30 @@ public class Controller {
             for (int col = 0; col < numCols; col++) {
                 Integer value = board[row][col];
                 String displayValue = (value != null) ? value.toString() : "";
+
+                // Create a Text node with the displayValue
                 Text text = new Text(displayValue);
-                puzzleGrid.add(text, col, row);
+
+                // Set alignment to CENTER for the Text node
+                text.setTextAlignment(TextAlignment.CENTER);
+
+                // Add the Text node to a StackPane for alignment
+                StackPane stackPane = new StackPane(text);
+                stackPane.setAlignment(Pos.CENTER);
+
+                // Add the StackPane to the GridPane with proper row and column
+                puzzleGrid.add(stackPane, col, row);
+
+                // Set alignment for the Text node using the custom method
+                TextAlignmentUtils.setAlignment(text, Pos.CENTER);
             }
+        }
+    }
+
+    public class TextAlignmentUtils {
+        public static void setAlignment(Text text, Pos alignment) {
+            StackPane parentPane = (StackPane) text.getParent();
+            parentPane.setAlignment(alignment);
         }
     }
 
