@@ -62,6 +62,10 @@ public class Controller {
     private void initialize() {
         newGame.setVisible(false);
         quit.setVisible(false);
+        runTimeText.setVisible(false);
+        nodesVisitedText.setVisible(false);
+        solveButton.setVisible(false);
+        menu.setVisible(false);
 
         // Clear existing items from the menu
         menu.getItems().clear();
@@ -91,8 +95,10 @@ public class Controller {
         int[][] board = initialState.getBoard();
         fillGridWithPuzzleValues(board);
         hideButton(startNewGame);
-        newGame.setVisible(true);
-        quit.setVisible(true);
+        runTimeText.setVisible(true);
+        nodesVisitedText.setVisible(true);
+        solveButton.setVisible(true);
+        menu.setVisible(true);
     }
 
     @FXML
@@ -128,6 +134,8 @@ public class Controller {
             SearchStats stats = solvePuzzle(selectedAlgorithm, initialState);
             updateUIWithStats(stats);
         }
+        newGame.setVisible(true);
+        quit.setVisible(true);
     }
 
     @FXML
