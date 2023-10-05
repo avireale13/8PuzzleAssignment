@@ -4,11 +4,16 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.StackPane;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.TextAlignment;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Controller {
     @FXML
@@ -140,15 +145,22 @@ public class Controller {
 
     @FXML
     private void handleNewGame(ActionEvent event) {
+        puzzleGrid.getChildren().clear();
+
+        addColoredRectangles();
+
+        runTime1.setText("");
+        nodeVisits2.setText("");
+        solveButton.setText("Solve");
+        menu.setText("Select Algorithm");
+
         initialState = PuzzleState.createRandomInitialState();
         int[][] board = initialState.getBoard();
         fillGridWithPuzzleValues(board);
         hideButton(startNewGame);
-    }
+        hideButton(quit);
+        hideButton(newGame);
 
-    @FXML
-    private void handleNewGameButton(ActionEvent event) {
-        handleNewGame(event);
     }
 
     @FXML
@@ -183,7 +195,6 @@ public class Controller {
     }
 
     private void fillGridWithPuzzleValues(int[][] board) {
-
         int numRows = board.length;
         int numCols = board[0].length;
 
@@ -202,11 +213,15 @@ public class Controller {
                 StackPane stackPane = new StackPane(text);
                 stackPane.setAlignment(Pos.CENTER);
 
-                // Add the StackPane to the GridPane with proper row and column
-                puzzleGrid.add(stackPane, col, row);
-
                 // Set alignment for the Text node using the custom method
                 TextAlignmentUtils.setAlignment(text, Pos.CENTER);
+
+                // Assign a unique ID to the Text element based on row and col
+                String textId = "text_" + row + "_" + col;
+                text.setId(textId);
+
+                // Add the StackPane to the GridPane with proper row and column
+                puzzleGrid.add(stackPane, col, row);
             }
         }
     }
@@ -218,13 +233,29 @@ public class Controller {
         }
     }
 
-    private void hideButton(Button button) {
-        button.setVisible(false);
+    private void addColoredRectangles() {
+        // Create colored rectangles based on properties from FXML
+        Rectangle[][] rectangles = new Rectangle[3][3];
+
+        for (int row = 0; row < 3; row++) {
+            for (int col = 0; col < 3; col++) {
+                Rectangle rectangle = new Rectangle();
+                rectangle.setWidth(81.0);
+                rectangle.setHeight(81.0);
+                rectangle.setArcWidth(5.0);
+                rectangle.setArcHeight(5.0);
+                rectangle.setFill(javafx.scene.paint.Color.valueOf("#8dff1f"));
+
+                rectangles[row][col] = rectangle;
+
+                // Add rectangles to GridPane at the correct row and column positions
+                puzzleGrid.add(rectangle, col, row);
+            }
+        }
     }
 
-    @FXML
-    private void showButton(ActionEvent event) {
-        buttonToShow.setVisible(true);
+    private void hideButton(Button button) {
+        button.setVisible(false);
     }
 }
 
