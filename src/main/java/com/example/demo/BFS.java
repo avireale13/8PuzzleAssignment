@@ -26,6 +26,10 @@ public class BFS {
                 long endTime = System.currentTimeMillis();
                 long runtime = endTime - startTime;
                 stats.setRuntime(runtime);
+
+                // Print the solution path
+                printSolutionPath(currentState);
+                System.out.println("---------------");
                 return stats;
             }
 
@@ -35,10 +39,31 @@ public class BFS {
                     visited.add(successor);
                 }
             }
+            printSolutionPath(currentState);
         }
 
         // Goal state not reachable
         return stats;
     }
+
+    static void printSolutionPath(PuzzleState goalState) {
+        List<PuzzleState> path = new ArrayList<>();
+        PuzzleState currentState = goalState;
+
+        while (currentState != null) {
+            path.add(currentState);
+            currentState = currentState.getParent();
+        }
+
+        Collections.reverse(path);
+
+        int move = 0;
+        for (PuzzleState state : path) {
+            state.printBoard();
+            System.out.println();
+            move++;
+        }
+    }
 }
+
 

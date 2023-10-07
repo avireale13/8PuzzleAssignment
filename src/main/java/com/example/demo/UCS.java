@@ -3,6 +3,7 @@ package com.example.demo;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.PriorityQueue;
+import java.util.Stack;
 
 public class UCS {
     public static class Node {
@@ -48,6 +49,8 @@ public class UCS {
                 long endTime = System.currentTimeMillis();
                 long runtime = endTime - startTime;
                 stats.setRuntime(runtime);
+                printSolutionPath(currentNode); // Print the solution path
+                System.out.println("---------------");
                 return stats;
             }
 
@@ -72,6 +75,22 @@ public class UCS {
 
         // Goal state not reachable
         return stats;
+    }
+
+    private static void printSolutionPath(Node node) {
+        Stack<Node> path = new Stack<>();
+        while (node != null) {
+            path.push(node);
+            node = node.parent;
+        }
+
+        int move = 0;
+        while (!path.isEmpty()) {
+            Node currentNode = path.pop();
+            currentNode.state.printBoard();
+            System.out.println();
+            move++;
+        }
     }
 }
 

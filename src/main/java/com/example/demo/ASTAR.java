@@ -1,7 +1,9 @@
 package com.example.demo;
+
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.PriorityQueue;
+import java.util.Stack;
 
 public class ASTAR {
     public static class Node {
@@ -51,6 +53,8 @@ public class ASTAR {
                 long endTime = System.currentTimeMillis();
                 long runtime = endTime - startTime;
                 stats.setRuntime(runtime);
+                printSolutionPath(currentNode); // Print the solution path
+                System.out.println("---------------");
                 return stats;
             }
 
@@ -82,4 +86,22 @@ public class ASTAR {
     public static int heuristic(PuzzleState state) {
         return Heuristics.manhattanDistance(state);
     }
+
+    // Add a method to print the solution path
+    private static void printSolutionPath(Node node) {
+        Stack<Node> path = new Stack<>();
+        while (node != null) {
+            path.push(node);
+            node = node.parent;
+        }
+
+        int move = 0;
+        while (!path.isEmpty()) {
+            Node currentNode = path.pop();
+            currentNode.state.printBoard();
+            System.out.println();
+            move++;
+        }
+    }
 }
+

@@ -140,6 +140,28 @@ public class PuzzleState {
         return Arrays.deepHashCode(board);
     }
 
+    public void printBoard() {
+        for (int row = 0; row < size; row++) {
+            for (int col = 0; col < size; col++) {
+                System.out.print("| " + board[row][col] + " ");
+            }
+            System.out.println("|"); // End the row with a |
+        }
+    }
+
+    private PuzzleState parent; // Add this field
+
+    // Add getter and setter for the parent field
+    public PuzzleState getParent() {
+        return parent;
+    }
+
+    public void setParent(PuzzleState parent) {
+        this.parent = parent;
+    }
+
+
+
 }
 
 
