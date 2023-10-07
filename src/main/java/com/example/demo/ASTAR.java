@@ -23,6 +23,7 @@ public class ASTAR {
     public static class NodeComparator implements Comparator<Node> {
         @Override
         public int compare(Node node1, Node node2) {
+            // Compare nodes based on their total cost (cost + heuristic)
             int f1 = node1.cost + node1.heuristic;
             int f2 = node2.cost + node2.heuristic;
             return Integer.compare(f1, f2);
@@ -30,18 +31,25 @@ public class ASTAR {
     }
 
     public static SearchStats aStarSearch(PuzzleState initialState) {
+        // Priority queue to manage open nodes based on their priority
         PriorityQueue<Node> openSet = new PriorityQueue<>(new NodeComparator());
+
+        // Set to keep track of closed nodes (visited nodes)
         HashSet<PuzzleState> closedSet = new HashSet<>();
 
         // Create a SearchStats object to track statistics
         SearchStats stats = new SearchStats();
 
+        // Initialize the start node with the initial puzzle state
         Node startNode = new Node(initialState, null, 0, heuristic(initialState));
         openSet.add(startNode);
 
+        // Record the start time for measuring runtime
         long startTime = System.currentTimeMillis();
 
+        // A* search algorithm
         while (!openSet.isEmpty()) {
+            // Get the node with the lowest total cost (priority)
             Node currentNode = openSet.poll();
             PuzzleState currentPuzzleState = currentNode.state;
 
@@ -53,13 +61,17 @@ public class ASTAR {
                 long endTime = System.currentTimeMillis();
                 long runtime = endTime - startTime;
                 stats.setRuntime(runtime);
-                printSolutionPath(currentNode); // Print the solution path
+
+                // Print the solution path
+                printSolutionPath(currentNode);
                 System.out.println("---------------");
                 return stats;
             }
 
+            // Mark the current puzzle state as visited
             closedSet.add(currentPuzzleState);
 
+            // Generate successors (neighboring states) for the current state
             for (PuzzleState successor : currentPuzzleState.generateSuccessors()) {
                 if (closedSet.contains(successor)) {
                     continue; // Skip already explored states
@@ -68,6 +80,7 @@ public class ASTAR {
                 int cost = currentNode.cost + 1; // Assuming uniform cost per move
                 int heuristic = heuristic(successor);
 
+                // Create a node for the successor state
                 Node successorNode = new Node(successor, currentNode, cost, heuristic);
 
                 // Check if this successor state is already in the open set with a lower cost
@@ -104,4 +117,5 @@ public class ASTAR {
         }
     }
 }
+
 

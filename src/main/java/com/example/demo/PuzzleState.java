@@ -10,19 +10,23 @@ public class PuzzleState {
     private int size;
 
     public PuzzleState(int[][] board) {
+        // Initialize the puzzle state with the given board
         this.board = board;
         this.size = board.length;
     }
 
     public int[][] getBoard() {
+        // Get the puzzle board
         return board;
     }
 
     public int getSize() {
+        // Get the size of the puzzle
         return size;
     }
 
     public boolean isGoalState() {
+        // Check if the current state is the goal state
         int[][] expectedGoal = {
                 {1, 2, 3},
                 {8, 0, 4},
@@ -41,6 +45,7 @@ public class PuzzleState {
     }
 
     public List<PuzzleState> generateSuccessors() {
+        // Generate successor states by moving the empty tile
         List<PuzzleState> successors = new ArrayList<>();
         int emptyRow = -1;
         int emptyCol = -1;
@@ -83,10 +88,12 @@ public class PuzzleState {
     }
 
     private boolean isValidMove(int row, int col) {
+        // Check if a move to the specified row and column is valid
         return row >= 0 && row < size && col >= 0 && col < size;
     }
 
     private int[][] cloneBoard() {
+        // Clone the current puzzle board
         int[][] copy = new int[size][size];
         for (int i = 0; i < size; i++) {
             System.arraycopy(board[i], 0, copy[i], 0, size);
@@ -95,6 +102,7 @@ public class PuzzleState {
     }
 
     public static PuzzleState createRandomInitialState() {
+        // Create a random initial puzzle state
         int size = 3; // Assuming a 3x3 puzzle
         int[][] board = new int[size][size];
         int[] values = new int[size * size];
@@ -118,6 +126,7 @@ public class PuzzleState {
     }
 
     private static void shuffleArray(int[] array) {
+        // Shuffle an array of integers randomly
         Random random = new Random();
         for (int i = array.length - 1; i > 0; i--) {
             int index = random.nextInt(i + 1);
@@ -129,6 +138,7 @@ public class PuzzleState {
 
     @Override
     public boolean equals(Object o) {
+        // Compare two PuzzleState objects for equality
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PuzzleState that = (PuzzleState) o;
@@ -137,10 +147,12 @@ public class PuzzleState {
 
     @Override
     public int hashCode() {
+        // Generate a hash code for the PuzzleState
         return Arrays.deepHashCode(board);
     }
 
     public void printBoard() {
+        // Print the current state of the puzzle board
         for (int row = 0; row < size; row++) {
             for (int col = 0; col < size; col++) {
                 System.out.print("| " + board[row][col] + " ");
@@ -153,16 +165,16 @@ public class PuzzleState {
 
     // Add getter and setter for the parent field
     public PuzzleState getParent() {
+        // Get the parent PuzzleState
         return parent;
     }
 
     public void setParent(PuzzleState parent) {
+        // Set the parent PuzzleState
         this.parent = parent;
     }
-
-
-
 }
+
 
 
 

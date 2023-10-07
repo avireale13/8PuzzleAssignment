@@ -6,6 +6,7 @@ import java.util.PriorityQueue;
 import java.util.Stack;
 
 public class UCS {
+    // Definition of a node used in the uniform cost search
     public static class Node {
         PuzzleState state;
         Node parent;
@@ -18,6 +19,7 @@ public class UCS {
         }
     }
 
+    // Comparator for comparing nodes based on cost
     public static class NodeComparator implements Comparator<Node> {
         @Override
         public int compare(Node node1, Node node2) {
@@ -25,19 +27,26 @@ public class UCS {
         }
     }
 
+    // Implementation of Uniform Cost Search
     public static SearchStats uniformCostSearch(PuzzleState initialState) {
+        // Priority queue to store nodes with the lowest cost at the front
         PriorityQueue<Node> openSet = new PriorityQueue<>(new NodeComparator());
+
+        // HashSet to keep track of visited states
         HashSet<PuzzleState> closedSet = new HashSet<>();
 
         // Create a SearchStats object to track statistics
         SearchStats stats = new SearchStats();
 
+        // Create the initial node with the provided puzzle state
         Node startNode = new Node(initialState, null, 0);
         openSet.add(startNode);
 
+        // Record the start time for measuring runtime
         long startTime = System.currentTimeMillis();
 
         while (!openSet.isEmpty()) {
+            // Get the node with the lowest cost from the priority queue
             Node currentNode = openSet.poll();
             PuzzleState currentPuzzleState = currentNode.state;
 
@@ -49,11 +58,14 @@ public class UCS {
                 long endTime = System.currentTimeMillis();
                 long runtime = endTime - startTime;
                 stats.setRuntime(runtime);
-                printSolutionPath(currentNode); // Print the solution path
+
+                // Print the solution path
+                printSolutionPath(currentNode);
                 System.out.println("---------------");
                 return stats;
             }
 
+            // Add the current state to the closed set to avoid revisiting
             closedSet.add(currentPuzzleState);
 
             for (PuzzleState successor : currentPuzzleState.generateSuccessors()) {
@@ -61,8 +73,10 @@ public class UCS {
                     continue; // Skip already explored states
                 }
 
+                // Calculate the cost to reach this successor state
                 int cost = currentNode.cost + 1;
 
+                // Create a node for the successor
                 Node successorNode = new Node(successor, currentNode, cost);
 
                 // Check if this successor state is already in the open set with a lower cost
@@ -77,6 +91,7 @@ public class UCS {
         return stats;
     }
 
+    // Method to print the solution path from the goal state to the initial state
     private static void printSolutionPath(Node node) {
         Stack<Node> path = new Stack<>();
         while (node != null) {
@@ -93,4 +108,5 @@ public class UCS {
         }
     }
 }
+
 
